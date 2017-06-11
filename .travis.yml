@@ -3,10 +3,10 @@ sudo: required
 
 env:
   matrix:
-    - LISP=ccl  'MAKEOPTS="CL=ccl DYNSIZE=512"'
-    - LISP=ccl  'MAKEOPTS="CL=ccl DYNSIZE=512"' PGVERSION=9.6
-    - LISP=sbcl 'MAKEOPTS="CL=sbcl"'
-    - LISP=sbcl 'MAKEOPTS="CL=sbcl"' PGVERSION=9.6
+    - LISP=ccl
+    - LISP=ccl  PGVERSION=9.6
+    #- LISP=sbcl
+    #- LISP=sbcl PGVERSION=9.6
 
 install:
   - ./.travis.sh lisp_install
@@ -21,10 +21,10 @@ before_script:
   - PGUSER=pgloader psql -d pgloader -c "create schema expected;"
   - PGUSER=pgloader psql -d pgloader -c "create schema err;"
   - make --version
-  - make $MAKEOPTS
+  - make "CL=$LISP" DYNSIZE=512
 
 script:
-  - PGUSER=pgloader make $MAKEOPTS check
+  - PGUSER=pgloader make "CL=$LISP" DYNSIZE=512 check
 
 notifications:
   email:
